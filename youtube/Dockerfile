@@ -1,6 +1,6 @@
 FROM python:3.10-bullseye as spark-base
 
-ARG SPARK_VERSION=3.5.1
+ARG SPARK_VERSION=3.4.0
 
 # Install tools required by the OS
 RUN apt-get update && \
@@ -34,7 +34,7 @@ RUN curl https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VER
 FROM spark-base as pyspark
 
 # Install python deps
-COPY requirements/requirements.txt .
+COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
 # Setup Spark related environment variables
@@ -53,6 +53,6 @@ RUN chmod u+x /opt/spark/sbin/* && \
 ENV PYTHONPATH=$SPARK_HOME/python/:$PYTHONPATH
 
 # Copy appropriate entrypoint script
-COPY entrypoint.sh $SPARK_HOME/entrypoint.sh
+COPY entrypoint.sh .
 
-ENTRYPOINT ["${SPARK_HOME}/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
